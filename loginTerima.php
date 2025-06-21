@@ -5,7 +5,6 @@ require_once 'config.php';
 $message = '';
 $message_type = '';
 
-// Handle login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo = getDBConnection();
@@ -105,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             submitBtn.disabled = true;
         });
 
-        // Auto hide messages after 5 seconds
         setTimeout(function() {
             const message = document.querySelector('.message');
             if (message) {

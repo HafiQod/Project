@@ -5,7 +5,6 @@ require_once 'config.php';
 $message = '';
 $message_type = '';
 
-// Handle registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo = getDBConnection();
@@ -17,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $confirm_password = $_POST['confirm_password'];
         $alamat = trim($_POST['alamat']);
         
-        // Validation
         if (empty($nama) || empty($email) || empty($no_hp) || empty($password) || empty($alamat)) {
             $message = 'Mohon lengkapi semua field!';
             $message_type = 'error';
@@ -31,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Konfirmasi password tidak cocok!';
             $message_type = 'error';
         } else {
-            // Check if email already exists
             $stmt = $pdo->prepare("SELECT id FROM penerima WHERE email = ?");
             $stmt->execute([$email]);
             
@@ -39,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = 'Email sudah terdaftar!';
                 $message_type = 'error';
             } else {
-                // Create tables if not exist
                 $createTable = "CREATE TABLE IF NOT EXISTS penerima (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nama VARCHAR(255) NOT NULL,
@@ -53,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )";
                 $pdo->exec($createTable);
                 
-                // Hash password and insert user
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO penerima (nama, email, no_hp, password, alamat) VALUES (?, ?, ?, ?, ?)");
                 
@@ -61,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $message = 'Registrasi berhasil! Silakan login dengan akun Anda.';
                     $message_type = 'success';
                     
-                    // Clear form data on success
                     $_POST = array();
                 } else {
                     $message = 'Gagal mendaftar. Silakan coba lagi.';
@@ -190,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             submitBtn.disabled = true;
         });
 
-        // Auto hide messages after 5 seconds
         setTimeout(function() {
             const message = document.querySelector('.message');
             if (message) {
@@ -201,7 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }, 5000);
 
-        // Phone number formatting
         document.querySelector('input[name="no_hp"]').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.startsWith('0')) {
