@@ -1,27 +1,14 @@
 <?php
-// config.php
-// File konfigurasi untuk Food Sharing Website
-
-// =============================================================================
-// KONFIGURASI DATABASE
-// =============================================================================
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'foodrescue');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
-// =============================================================================
-// KONFIGURASI APLIKASI
-// =============================================================================
 define('SITE_NAME', 'Food Sharing - Share a Meal, Share a Moment');
 
-// Timezone
 date_default_timezone_set('Asia/Jakarta');
 
-// =============================================================================
-// FUNGSI KONEKSI DATABASE
-// =============================================================================
 function getDBConnection() {
     try {
         $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
@@ -34,21 +21,14 @@ function getDBConnection() {
     }
 }
 
-// =============================================================================
-// FUNGSI UTILITY
-// =============================================================================
-
-// Sanitize input
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-// Validasi email
 function isValidEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-// Format tanggal Indonesia
 function formatTanggalIndonesia($tanggal) {
     $bulan = [
         1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
@@ -65,9 +45,6 @@ function formatTanggalIndonesia($tanggal) {
     return $hari . ' ' . $bulan[$bulan_num] . ' ' . $tahun . ' - ' . $jam;
 }
 
-// =============================================================================
-// CLASS UNTUK MENGELOLA SARAN
-// =============================================================================
 class SaranManager {
     private $pdo;
     
@@ -76,13 +53,10 @@ class SaranManager {
         $this->ensureStatusColumn();
     }
     
-    // Pastikan kolom status ada
     private function ensureStatusColumn() {
         try {
-            // Cek apakah kolom status sudah ada
             $stmt = $this->pdo->query("SHOW COLUMNS FROM saran LIKE 'status'");
             if ($stmt->rowCount() == 0) {
-                // Tambah kolom status jika belum ada
                 $this->pdo->exec("ALTER TABLE saran ADD COLUMN status ENUM('baru', 'dibaca', 'dibalas') DEFAULT 'baru'");
                 error_log("Added status column to saran table");
             }
@@ -91,7 +65,6 @@ class SaranManager {
         }
     }
     
-    // Tambah saran baru
     public function tambahSaran($nama, $email, $pesan) {
         try {
             $stmt = $this->pdo->prepare("INSERT INTO saran (nama, email, pesan, tanggal_kirim) VALUES (?, ?, ?, NOW())");
@@ -101,7 +74,6 @@ class SaranManager {
         }
     }
     
-    // Ambil semua saran
     public function getAllSaran() {
         try {
             $stmt = $this->pdo->query("SELECT * FROM saran ORDER BY tanggal_kirim DESC");
@@ -111,7 +83,6 @@ class SaranManager {
         }
     }
     
-    // Update status saran
     public function updateStatus($id, $status) {
         try {
             $allowed_status = ['baru', 'dibaca', 'dibalas'];
@@ -127,12 +98,10 @@ class SaranManager {
         }
     }
     
-    // Hapus saran (alias untuk deleteSaran)
     public function hapusSaran($id) {
         return $this->deleteSaran($id);
     }
     
-    // Hapus saran
     public function deleteSaran($id) {
         try {
             $stmt = $this->pdo->prepare("DELETE FROM saran WHERE id = ?");
@@ -143,7 +112,6 @@ class SaranManager {
         }
     }
     
-    // Statistik saran
     public function getStatistik() {
         try {
             $stmt = $this->pdo->query("SELECT 
@@ -166,9 +134,6 @@ class SaranManager {
     }
 }
 
-// =============================================================================
-// CLASS UNTUK AUTENTIKASI PENYUMBANG DAN PENERIMA
-// =============================================================================
 class UserAuth {
     private static $pdo;
     
@@ -179,7 +144,6 @@ class UserAuth {
         return self::$pdo;
     }
     
-    // Login penyumbang
     public static function loginPenyumbang($email, $password) {
         try {
             $pdo = self::getConnection();
@@ -201,7 +165,6 @@ class UserAuth {
         }
     }
     
-    // Login penerima
     public static function loginPenerima($email, $password) {
         try {
             $pdo = self::getConnection();
@@ -223,17 +186,14 @@ class UserAuth {
         }
     }
     
-    // Check if penyumbang logged in
     public static function isPenyumbangLoggedIn() {
         return isset($_SESSION['penyumbang_logged_in']) && $_SESSION['penyumbang_logged_in'] === true;
     }
     
-    // Check if penerima logged in
     public static function isPenerimaLoggedIn() {
         return isset($_SESSION['penerima_logged_in']) && $_SESSION['penerima_logged_in'] === true;
     }
     
-    // Get penyumbang info
     public static function getPenyumbangInfo() {
         if (self::isPenyumbangLoggedIn()) {
             return [
@@ -245,7 +205,6 @@ class UserAuth {
         return null;
     }
     
-    // Get penerima info
     public static function getPenerimaInfo() {
         if (self::isPenerimaLoggedIn()) {
             return [
@@ -257,7 +216,6 @@ class UserAuth {
         return null;
     }
     
-    // Logout penyumbang
     public static function logoutPenyumbang() {
         unset($_SESSION['penyumbang_logged_in']);
         unset($_SESSION['penyumbang_id']);
@@ -265,7 +223,6 @@ class UserAuth {
         unset($_SESSION['penyumbang_email']);
     }
     
-    // Logout penerima
     public static function logoutPenerima() {
         unset($_SESSION['penerima_logged_in']);
         unset($_SESSION['penerima_id']);
@@ -274,9 +231,6 @@ class UserAuth {
     }
 }
 
-// =============================================================================
-// CLASS UNTUK AUTENTIKASI ADMIN
-// =============================================================================
 class AdminAuth {
     private static $pdo;
     
@@ -287,17 +241,13 @@ class AdminAuth {
         return self::$pdo;
     }
     
-    // Login admin dengan database atau fallback ke hardcoded
     public static function login($username, $password) {
         try {
-            // Coba login dengan database dulu
             $pdo = self::getConnection();
             
-            // Cek apakah tabel admin ada
             $tables = $pdo->query("SHOW TABLES LIKE 'admin'")->fetchAll();
             
             if (count($tables) > 0) {
-                // Tabel admin ada, coba login dengan database
                 $stmt = $pdo->prepare("SELECT id, username, password, nama, email FROM admin WHERE username = ? LIMIT 1");
                 $stmt->execute([sanitizeInput($username)]);
                 $admin = $stmt->fetch();
@@ -310,7 +260,6 @@ class AdminAuth {
                     $_SESSION['admin_email'] = $admin['email'];
                     $_SESSION['login_time'] = time();
                     
-                    // Update last login
                     $update_stmt = $pdo->prepare("UPDATE admin SET updated_at = NOW() WHERE id = ?");
                     $update_stmt->execute([$admin['id']]);
                     
@@ -318,7 +267,6 @@ class AdminAuth {
                 }
             }
             
-            // Fallback ke hardcoded credentials jika tabel admin tidak ada atau login gagal
             $admin_users = [
                 'admin' => 'admin123',
                 'foodrescue' => 'rescue2024'
@@ -334,7 +282,6 @@ class AdminAuth {
             
             return false;
         } catch (PDOException $e) {
-            // Jika ada error database, fallback ke hardcoded
             $admin_users = [
                 'admin' => 'admin123',
                 'foodrescue' => 'rescue2024'
@@ -352,12 +299,10 @@ class AdminAuth {
         }
     }
     
-    // Cek apakah admin sudah login
     public static function isLoggedIn() {
         return isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
     }
     
-    // Get admin info
     public static function getAdminInfo() {
         if (self::isLoggedIn()) {
             return [
@@ -371,24 +316,20 @@ class AdminAuth {
         return null;
     }
     
-    // Logout admin
     public static function logout() {
         session_unset();
         session_destroy();
     }
     
-    // Change password
     public static function changePassword($admin_id, $old_password, $new_password) {
         try {
             $pdo = self::getConnection();
             
-            // Verify old password
             $stmt = $pdo->prepare("SELECT password FROM admin WHERE id = ?");
             $stmt->execute([$admin_id]);
             $admin = $stmt->fetch();
             
             if ($admin && password_verify($old_password, $admin['password'])) {
-                // Update with new password
                 $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
                 $update_stmt = $pdo->prepare("UPDATE admin SET password = ?, updated_at = NOW() WHERE id = ?");
                 return $update_stmt->execute([$new_hash, $admin_id]);
@@ -400,7 +341,6 @@ class AdminAuth {
     }
 }
 
-// Inisialisasi session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

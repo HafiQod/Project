@@ -7,7 +7,7 @@
 body {
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
-    background-image: url('../images/auth-bg.jpg'); /* Background gambar tangan berbagi makanan */
+    background-image: url('../images/auth-bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -18,7 +18,6 @@ body {
     position: relative;
 }
 
-/* Overlay untuk background */
 body::before {
     content: '';
     position: absolute;
@@ -137,7 +136,6 @@ body::before {
     font-size: 0.95rem;
 }
 
-/* Floating label effect */
 .form-group.floating-label {
     position: relative;
 }
@@ -274,7 +272,6 @@ body::before {
     border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
-/* Loading state */
 .btn-primary.loading {
     position: relative;
     color: transparent;
@@ -299,7 +296,6 @@ body::before {
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .auth-container {
         padding: 30px 25px;

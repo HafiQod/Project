@@ -420,7 +420,6 @@
         .action-list li:nth-child(3) { transition-delay: 0.3s; }
         .action-list li:nth-child(4) { transition-delay: 0.4s; }
 
-        /* Admin Link */
         .admin-link {
             position: fixed;
             top: 20px;
