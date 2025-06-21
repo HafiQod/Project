@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+}
+
+.choice-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 50px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    min-width: 280px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.choice-card:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 1);
+}
+
+.choice-card:active {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.icon {
+    margin-bottom: 30px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5fb3a3 0%, #4a9289 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(95, 179, 163, 0.3);
+    transition: all 0.3s ease;
+}
+
+.choice-card:hover .icon {
+    transform: scale(1.1);
+    box-shadow: 0 15px 35px rgba(95, 179, 163, 0.5);
+}
+
+.icon img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.label {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.choice-card:hover .label {
+    color: #5fb3a3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .choice-card {
+        min-width: 250px;
+        min-height: 300px;
+        padding: 40px 30px;
+    }
+    
+    .icon {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 25px;
+    }
+    
+    .icon img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .label {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .choice-card {
+        min-width: 220px;
+        min-height: 280px;
+        padding: 35px 25px;
+    }
+    
+    .icon {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 20px;
+    }
+    
+    .icon img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .label {
+        font-size: 1.6rem;
+    }
+}
+
+/* Loading animation */
+.choice-card.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.choice-card.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #5fb3a3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
