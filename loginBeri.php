@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['penyumbang_nama'] = $user['nama'];
                 $_SESSION['penyumbang_email'] = $user['email'];
                 
-                header('Location: dashboardBeri.php');
+                header('Location: homepageBeri.php');
                 exit();
             } else {
                 $message = 'Email atau password salah!';

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['penerima_nama'] = $user['nama'];
                 $_SESSION['penerima_email'] = $user['email'];
                 
-                header('Location: dashboardTerima.php');
+                header('Location: homepageTerima.php');
                 exit();
             } else {
                 $message = 'Email atau password salah!';
