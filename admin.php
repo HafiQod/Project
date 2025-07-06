@@ -9,7 +9,7 @@ if ($_POST && isset($_POST['login'])) {
     $input_password = $_POST['password'] ?? '';
     
     if (AdminAuth::login($input_username, $input_password)) {
-        header('Location: admin.php');
+        header('Location: admin_dashboard.php');
         exit;
     } else {
         $login_error = 'Username atau password salah!';
@@ -120,7 +120,7 @@ if ($admin_logged_in) {
                 <div class="nav">
                     <div>
                         <h1>🎛️ Admin Panel</h1>
-                        <p>Selamat datang, <strong><?php echo htmlspecialchars($admin_info['nama'] ?? $admin_info['username']); ?></strong> | Kelola saran dan feedback pengguna</p>
+                        <p>Selamat datang, <strong><?php echo htmlspecialchars($admin_info['nama'] ?? $admin_info['username']); ?></strong></p>
                     </div>
                     <div>
                         <a href="index.php">Lihat Website</a>
@@ -279,9 +279,7 @@ if ($admin_logged_in) {
             </div>
         </div>
 
-        <script>
-            
-        </script>
+        <script src="js/admin.js"></script>
     <?php endif; ?>
 </body>
 </html>
